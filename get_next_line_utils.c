@@ -6,7 +6,7 @@
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 11:27:17 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/08 11:39:58 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/01/09 10:05:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,25 @@ char	*append_char(char *str, char c)
 	dst[i] = '\0';
 	free(str);
 	return (dst);
+}
+
+char	*append_buff(char *str, char *buff)
+{
+	char	*dst;
+	int		i;
+	int		j;
+
+	dst = malloc(ft_strlen(str) + ft_strlen(buff) + 1);
+	if (!dst)
+		return (NULL);
+	i = -1;
+	while (str[++i])
+		dst[i] = str[i];
+	j = -1;
+	while (buff[++j])
+		dst[i++] = buff[j];
+	dst[i] = '\0';
+	free(str);
+	str = dst;
+	return (str);
 }
