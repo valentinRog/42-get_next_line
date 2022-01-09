@@ -6,7 +6,7 @@
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 11:27:17 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/09 10:05:43 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/01/09 11:28:04 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ int		ft_strlen(char	*str)
 	if (*str && str)
 		return (1 + ft_strlen(str + 1));
 	return (0);
+}
+
+int		is_in_str(char *str, char c)
+{
+	if (!str || !(*str))
+		return (0);
+	if (*str == c)
+		return (1);
+	return (is_in_str(str + 1, c));
 }
 
 char	*append_char(char *str, char c)
@@ -55,4 +64,22 @@ char	*append_buff(char *str, char *buff)
 	free(str);
 	str = dst;
 	return (str);
+}
+
+
+char	*get_static(char *str)
+{
+	while (*str != '\n')
+		str++;
+	return (str + 1);
+}
+
+char	*cut_str(char *str)
+{
+	char *temp = str;
+	while (*str != '\n')
+		str++;
+	if (*(str + 1))
+		*(str + 1) = 0;
+	return temp;
 }
