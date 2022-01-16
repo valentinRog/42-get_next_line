@@ -6,15 +6,17 @@
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 10:50:38 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/14 10:00:11 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/01/13 17:35:45 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
+
+# define FD_MAX 255
 
 typedef struct s_list
 {

@@ -6,11 +6,11 @@
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 10:49:58 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/14 09:55:50 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/01/14 09:57:01 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	is_in_str_lst(t_list *lst, char a)
 {
@@ -74,18 +74,20 @@ char	*get_line_lst(t_list *lst)
 
 char	*get_next_line(int fd)
 {
-	static t_list	*lst;
 	int				bytes_read;
 	char			buff[BUFFER_SIZE];
 	char			*line;
+	static t_list	*save[FD_MAX + 1];
 
 	bytes_read = BUFFER_SIZE;
-	while (!is_in_str_lst(lst, '\n') && bytes_read == BUFFER_SIZE)
+	if (fd < 0 || fd > FD_MAX)
+		return (NULL);
+	while (!is_in_str_lst(save[fd], '\n') && bytes_read == BUFFER_SIZE)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
-		append_buff_lst(&lst, buff, bytes_read);
+		append_buff_lst(&save[fd], buff, bytes_read);
 	}
-	line = get_line_lst(lst);
-	cut_str_lst(&lst);
+	line = get_line_lst(save[fd]);
+	cut_str_lst(&save[fd]);
 	return (line);
 }
