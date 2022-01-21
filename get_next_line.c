@@ -6,7 +6,7 @@
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/08 10:49:58 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/14 09:55:50 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/01/21 18:21:43 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,15 @@ void	append_buff_lst(t_list **lst, char *buff, int size)
 		if (!c)
 			return ;
 		*c = buff[i];
-		ft_lstadd_back(lst, ft_lstnew(c));
+		lst_add_back(lst, lst_new(c));
 	}
 }
 
 void	cut_str_lst(t_list **lst)
 {
 	while ((*lst) && *(char *)((*lst)->content) != '\n')
-		ft_pop_front(lst);
-	ft_pop_front(lst);
+		lst_pop_front(lst);
+	lst_pop_front(lst);
 }
 
 char	*get_line_lst(t_list *lst)
@@ -54,7 +54,7 @@ char	*get_line_lst(t_list *lst)
 		return (NULL);
 	head = lst;
 	i = 0;
-	while (lst && *(char *)(lst->content) != '\n' && i++ >= 0)
+	while (lst && i++ >= 0 && *(char *)(lst->content) != '\n')
 		lst = lst->next;
 	lst = head;
 	dst = malloc(i + 1);
@@ -76,15 +76,21 @@ char	*get_next_line(int fd)
 {
 	static t_list	*lst;
 	int				bytes_read;
-	char			buff[BUFFER_SIZE];
+	char			*buff;
 	char			*line;
 
 	bytes_read = BUFFER_SIZE;
+	if (BUFFER_SIZE < 1)
+		return (NULL);
+	buff = malloc(BUFFER_SIZE);
+	if (!buff)
+		return (NULL);
 	while (!is_in_str_lst(lst, '\n') && bytes_read == BUFFER_SIZE)
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
 		append_buff_lst(&lst, buff, bytes_read);
 	}
+	free(buff);
 	line = get_line_lst(lst);
 	cut_str_lst(&lst);
 	return (line);

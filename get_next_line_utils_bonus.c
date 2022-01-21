@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/08 11:27:17 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/13 09:47:19 by vrogiste         ###   ########.fr       */
+/*   Created: 2022/01/17 09:21:20 by vrogiste          #+#    #+#             */
+/*   Updated: 2022/01/17 09:21:32 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-t_list	*ft_lstlast(t_list *lst)
+t_list	*lst_last(t_list *lst)
 {
 	if (!lst)
 		return (0);
 	if (lst->next)
-		return (ft_lstlast(lst->next));
+		return (lst_last(lst->next));
 	return (lst);
 }
 
-void	ft_lstadd_back(t_list **alst, t_list *new)
+void	lst_add_back(t_list **alst, t_list *new)
 {
 	t_list	*last;
 
@@ -29,12 +29,12 @@ void	ft_lstadd_back(t_list **alst, t_list *new)
 		*alst = new;
 	else
 	{
-		last = ft_lstlast(*alst);
+		last = lst_last(*alst);
 		last->next = new;
 	}
 }
 
-t_list	*ft_lstnew(void *data)
+t_list	*lst_new(void *data)
 {
 	t_list	*node;
 
@@ -46,14 +46,14 @@ t_list	*ft_lstnew(void *data)
 	return (node);
 }
 
-int	ft_lstsize(t_list *lst)
+int	lst_size(t_list *lst)
 {
 	if (lst)
-		return (1 + ft_lstsize(lst->next));
+		return (1 + lst_size(lst->next));
 	return (0);
 }
 
-void	ft_pop_front(t_list **head)
+void	lst_pop_front(t_list **head)
 {
 	t_list	*new_head;
 
