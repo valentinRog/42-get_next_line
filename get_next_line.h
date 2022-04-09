@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 12:10:38 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/04/09 15:38:12 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/04/09 15:55:57 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 64
 # endif
 
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
 # include <stdint.h>
-# include <string.h>
 
 /*get_next_line_utils*/
 int64_t	min(int64_t a, int64_t b);
