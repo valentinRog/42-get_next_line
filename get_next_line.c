@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 12:10:41 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/04/09 15:42:32 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/04/09 15:48:56 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	cut_line(char **astr)
 	str_n_del_front(astr, ptr + 1 - *astr);
 }
 
-static char	*get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*reminder;
 	char		*buff;
