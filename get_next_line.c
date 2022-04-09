@@ -6,7 +6,7 @@
 /*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/09 12:10:41 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/04/09 15:56:58 by vrogiste         ###   ########.fr       */
+/*   Updated: 2022/04/09 16:11:15 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ char	*get_next_line(int fd)
 		str_n_del_front(&reminder, str_len(reminder));
 	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
+	{
+		str_n_del_front(&reminder, str_len(reminder));
 		return (NULL);
+	}
 	*buff = '\0';
 	while (!ft_memchr(reminder, '\n', str_len(reminder)))
 	{
