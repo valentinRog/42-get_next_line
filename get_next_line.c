@@ -3,95 +3,106 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vrogiste <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: vrogiste <vrogiste@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/08 10:49:58 by vrogiste          #+#    #+#             */
-/*   Updated: 2022/01/21 18:21:43 by vrogiste         ###   ########.fr       */
+/*   Created: 2022/04/09 12:10:41 by vrogiste          #+#    #+#             */
+/*   Updated: 2022/04/09 15:42:32 by vrogiste         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	is_in_str_lst(t_list *lst, char a)
-{
-	if (!lst)
-		return (0);
-	if (*(char *)(lst->content) == a)
-		return (1);
-	return (is_in_str_lst(lst->next, a));
-}
-
-void	append_buff_lst(t_list **lst, char *buff, int size)
-{
-	int		i;
-	char	*c;
-
-	i = -1;
-	while (++i < size && buff[i])
-	{
-		c = malloc(1);
-		if (!c)
-			return ;
-		*c = buff[i];
-		lst_add_back(lst, lst_new(c));
-	}
-}
-
-void	cut_str_lst(t_list **lst)
-{
-	while ((*lst) && *(char *)((*lst)->content) != '\n')
-		lst_pop_front(lst);
-	lst_pop_front(lst);
-}
-
-char	*get_line_lst(t_list *lst)
+static void	str_append_buff(char **astr, char *buff, size_t n)
 {
 	char	*dst;
-	t_list	*head;
-	int		i;
+	size_t	i;
+	size_t	len;
 
-	if (!lst)
-		return (NULL);
-	head = lst;
-	i = 0;
-	while (lst && i++ >= 0 && *(char *)(lst->content) != '\n')
-		lst = lst->next;
-	lst = head;
-	dst = malloc(i + 1);
-	if (!dst)
-		return (NULL);
-	i = 0;
-	while (lst && *(char *)(lst->content) != '\n')
+	if (!astr || !buff || !*buff || !n)
+		return ;
+	len = str_len(*astr);
+	dst = malloc((len + n + 1) * sizeof(char));
+	if (dst)
 	{
-		dst[i++] = *(char *)(lst->content);
-		lst = lst->next;
+		if (len)
+			str_n_cpy(dst, *astr, len);
+		i = 0;
+		while (i < n)
+		{
+			dst[len + i] = buff[i];
+			i++;
+		}
+		dst[len + i] = '\0';
 	}
-	if (lst && *(char *)(lst->content) == '\n')
-		dst[i++] = '\n';
-	dst[i] = 0;
-	return (dst);
+	free(*astr);
+	*astr = dst;
 }
 
-char	*get_next_line(int fd)
+static void	str_n_del_front(char **astr, size_t n)
 {
-	static t_list	*lst;
-	int				bytes_read;
-	char			*buff;
-	char			*line;
+	char	*dst;
 
-	bytes_read = BUFFER_SIZE;
-	if (BUFFER_SIZE < 1)
+	if (!*astr || !n)
+		return ;
+	n = min(str_len(*astr), n);
+	dst = malloc(((str_len(*astr) - n) + 1) * sizeof(char));
+	if (dst)
+		str_n_cpy(dst, (*astr) + n, str_len((*astr + n)));
+	free(*astr);
+	if (!*dst)
+	{
+		free(dst);
+		dst = NULL;
+	}
+	*astr = dst;
+}
+
+static char	*get_line(char *str)
+{
+	char	*ptr;
+
+	if (!str)
 		return (NULL);
-	buff = malloc(BUFFER_SIZE);
+	ptr = memchr(str, '\n', strlen(str));
+	if (!ptr)
+		ptr = str + strlen(str);
+	return (str_n_dup(str, ptr + 1 - str));
+}
+
+static void	cut_line(char **astr)
+{
+	char	*ptr;
+
+	if (!*astr)
+		return ;
+	ptr = memchr(*astr, '\n', str_len(*astr));
+	if (!ptr)
+		ptr = *astr + str_len(*astr);
+	str_n_del_front(astr, ptr + 1 - *astr);
+}
+
+static char	*get_next_line(int fd)
+{
+	static char	*reminder;
+	char		*buff;
+	size_t		bytes_read;
+	char		*line;
+
+	if (fd < 0)
+		str_n_del_front(&reminder, str_len(reminder));
+	buff = malloc(sizeof(char) * BUFFER_SIZE);
 	if (!buff)
 		return (NULL);
-	while (!is_in_str_lst(lst, '\n') && bytes_read == BUFFER_SIZE)
+	*buff = '\0';
+	while (!ft_memchr(reminder, '\n', str_len(reminder)))
 	{
 		bytes_read = read(fd, buff, BUFFER_SIZE);
-		append_buff_lst(&lst, buff, bytes_read);
+		str_append_buff(&reminder, buff, bytes_read);
+		if (bytes_read != BUFFER_SIZE)
+			break ;
 	}
+	line = get_line(reminder);
+	cut_line(&reminder);
 	free(buff);
-	line = get_line_lst(lst);
-	cut_str_lst(&lst);
 	return (line);
 }
